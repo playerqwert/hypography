@@ -185,3 +185,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .queue .qi span { position: absolute; left: 4px; bottom: 3px; font-size: 10px; font-weight: 700; background: rgba(255,255,255,.85); border-radius: 5px; padding: 0 4px; }
 #btnQueue.pulse { animation: qpulse .5s ease-out; }
 @keyframes qpulse { 50% { transform: scale(1.08); background: var(--lime); } }
+
+.bugBtn { display: inline-flex; align-items: center; gap: 6px; color: rgba(255,255,255,.62); text-decoration: none; font-weight: 600; font-size: 13px; padding: 8px 10px; border-radius: 10px; }
+.bugBtn:hover { color: #fff; background: #2a2a2a; }
+.bugBtn .ico { width: 18px; height: 18px; }
+.devnote { font-size: 12px; color: var(--muted); text-align: center; margin: 4px 0 0; }
+.devnote a { color: var(--ink); font-weight: 700; }
+@media (max-width: 900px) { .bugBtn span { display: none; } }

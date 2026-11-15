@@ -464,6 +464,12 @@
       commit(); syncUI(); rebuild();
     });
     $("btnUndo").addEventListener("click", undo);
+    // ссылка на разработчика: открываем снаружи (браузер / приложение Telegram), а не внутри программы
+    $$(".tgLink").forEach((a) => a.addEventListener("click", (e) => {
+      const url = a.href;
+      if (window.Neutralino && window.NL_TOKEN !== undefined) { e.preventDefault(); window.Neutralino.os.open(url); }
+      else if (window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()) { e.preventDefault(); window.location.href = url; }
+    }));
     $("btnQueue").addEventListener("click", addToQueue);
     $("qExport").addEventListener("click", exportQueue);
     $("qClear").addEventListener("click", () => { QUEUE.length = 0; buildQueue(); });

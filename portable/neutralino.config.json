@@ -16,7 +16,8 @@
     "app.exit",
     "os.showSaveDialog",
     "filesystem.writeBinaryFile",
-    "window.*"
+    "window.*",
+    "os.open"
   ],
   "modes": {
     "window": {
