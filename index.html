@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<title>Hypography — Типография хайпа</title>
+<link rel="stylesheet" href="css/app.css?v=24">
+</head>
+<body>
+<div id="boot" class="boot"><b>Типография хайпа</b><span>загружаю шрифты и фото…</span></div>
+
+<header class="top">
+  <div class="brand"><b>Типография хайпа</b><span>Hypography · плакаты для 5ORKA · SLAY 2026</span></div>
+  <nav class="formats" id="formats" aria-label="Формат">
+    <button data-format="poster" class="on">Плакат</button>
+    <button data-format="meme">Мем</button>
+  </nav>
+  <div class="exportWrap">
+    <button id="btnExport" class="btn primary">Скачать <span class="caret">▾</span></button>
+    <div id="exportMenu" class="menu" hidden></div>
+  </div>
+</header>
+
+<main class="app">
+  <section class="stage">
+    <div class="canvasWrap" id="canvasWrap"><canvas id="cv" aria-label="Плакат"></canvas></div>
+    <div class="actions">
+      <button id="btnDice" class="btn dice"><span class="die"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h3.5c2 0 3.2 1 4.5 3l2 4c1.3 2 2.5 3 4.5 3H21"/><path d="M3 17h3.5c1.4 0 2.4-.5 3.3-1.5"/><path d="M14.2 8.5c.9-1 1.9-1.5 3.3-1.5H21"/><path d="M18 4l3 3-3 3"/><path d="M18 14l3 3-3 3"/></svg></span> Ещё вариант</button>
+      <button id="btnUndo" class="btn ghost icon" title="Отменить (Ctrl+Z)" aria-label="Отменить">↶</button>
+      <button id="btnQueue" class="btn ghost" title="Положить этот дизайн в очередь на печать">＋ В очередь</button>
+      <button id="btnReset" class="btn ghost">Вернуть всё на места</button>
+    </div>
+    <p class="hint">Тащи элементы — они цепляются к краям и центрам (Alt — без привязки). Двойной клик по надписи — изменить. Shift+клик или рамка — выделить несколько. Ctrl+V — вставить картинку.</p>
+  </section>
+
+  <aside class="panel" id="panel">
+    <section class="card" id="queueCard" hidden>
+      <h3>Очередь на печать <button class="btn ghost mini" id="qClear">Очистить</button></h3>
+      <div class="queue" id="queueList"></div>
+      <div class="row">
+        <span class="lbl">На листе A4</span>
+        <div class="chips" id="qMode"><button data-q="1" class="on">По одному</button><button data-q="3">По 3</button><button data-q="9">По 9</button></div>
+      </div>
+      <button class="btn primary wide" id="qExport">Скачать одним PDF</button>
+      <p class="tip">Нажми на миниатюру — дизайн вернётся в редактор. Мемы на общих листах идут по 6 или 12. Очередь хранится, пока программа открыта.</p>
+    </section>
+    <section class="card">
+      <h3>Стиль</h3>
+      <div class="styles" id="styles">
+        <button data-style="fan"><canvas></canvas><b>Фан-сектор</b><i>гигантская «5», лента</i></button>
+        <button data-style="zine"><canvas></canvas><b>Ксерокс</b><i>скотч, маркер</i></button>
+        <button data-style="boss"><canvas></canvas><b>Босс-файт</b><i>игровой экран</i></button>
+        <button data-style="wanted"><canvas></canvas><b>Розыск</b><i>вестерн-плакат</i></button>
+        <button data-style="news"><canvas></canvas><b>Таблоид</b><i>первая полоса</i></button>
+      </div>
+      <div class="row" id="numRow">
+        <span class="lbl">Число на фоне</span>
+        <div class="chips" id="numChips"><button data-num="5">5</button><button data-num="42">42</button></div>
+        <input id="numInput" class="inp num" maxlength="3" placeholder="своё" inputmode="numeric">
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Фото</h3>
+      <div class="photos" id="photos"></div>
+      <div class="row">
+        <span class="lbl">Обработка</span>
+        <div class="chips" id="fxChips">
+          <button data-fx="auto" class="on">Авто</button>
+          <button data-fx="halftone">Растр</button>
+          <button data-fx="xerox">Ксерокс</button>
+          <button data-fx="dither">Пиксели</button>
+          <button data-fx="photo">Фото</button>
+        </div>
+      </div>
+      <div class="row" id="fitRow">
+        <span class="lbl">Кадр</span>
+        <div class="chips" id="fitChips"><button data-fit="auto" class="on">Авто</button><button data-fit="full">Целиком</button></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Текст</h3>
+      <div class="chips lang" id="langChips">
+        <button data-lang="ru" class="on">RU</button>
+        <button data-lang="en">EN</button>
+        <button data-lang="pt">PT</button>
+      </div>
+      <label class="fieldLbl" for="tHead" id="headLabel">Главный текст</label>
+      <div class="field">
+        <textarea id="tHead" rows="2" spellcheck="false"></textarea>
+        <button class="diceS" id="diceHead" title="Другая фраза" aria-label="Другая фраза"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h3.5c2 0 3.2 1 4.5 3l2 4c1.3 2 2.5 3 4.5 3H21"/><path d="M3 17h3.5c1.4 0 2.4-.5 3.3-1.5"/><path d="M14.2 8.5c.9-1 1.9-1.5 3.3-1.5H21"/><path d="M18 4l3 3-3 3"/><path d="M18 14l3 3-3 3"/></svg></button>
+      </div>
+      <div id="subWrap">
+        <label class="fieldLbl" for="tSub" id="subLabel">Лента</label>
+        <div class="field">
+          <input id="tSub" spellcheck="false">
+          <button class="diceS" id="diceSub" title="Другая фраза" aria-label="Другая фраза"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h3.5c2 0 3.2 1 4.5 3l2 4c1.3 2 2.5 3 4.5 3H21"/><path d="M3 17h3.5c1.4 0 2.4-.5 3.3-1.5"/><path d="M14.2 8.5c.9-1 1.9-1.5 3.3-1.5H21"/><path d="M18 4l3 3-3 3"/><path d="M18 14l3 3-3 3"/></svg></button>
+        </div>
+      </div>
+      <p class="tip">Enter в главном тексте — перенос строки вручную. Без него программа сама красиво разобьёт.</p>
+    </section>
+
+    <section class="card">
+      <h3>Цвет <button class="diceS small" id="diceColor" title="Случайный цвет" aria-label="Случайный цвет"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h3.5c2 0 3.2 1 4.5 3l2 4c1.3 2 2.5 3 4.5 3H21"/><path d="M3 17h3.5c1.4 0 2.4-.5 3.3-1.5"/><path d="M14.2 8.5c.9-1 1.9-1.5 3.3-1.5H21"/><path d="M18 4l3 3-3 3"/><path d="M18 14l3 3-3 3"/></svg></button></h3>
+      <div class="seg" id="colorSeg">
+        <button data-c="bw" class="on">Ч/Б — для принтера</button>
+        <button data-c="color">Цвет</button>
+      </div>
+      <div id="colorBox">
+        <span class="lbl">Основные</span>
+        <div class="swatches" id="swatches"></div>
+        <span class="lbl">Мои</span>
+        <div class="swatches" id="mySwatches"></div>
+        <p class="tip" id="customHint"></p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Шрифт заголовка</h3>
+      <div class="fonts" id="fonts"></div>
+    </section>
+
+    <section class="card" id="qrCard">
+      <h3>QR-код <label class="switch"><input type="checkbox" id="qrShow" checked><span></span></label></h3>
+      <div class="seg three" id="qrSeg">
+        <button data-q="orig" class="on">С плакатов</button>
+        <button data-q="clean">Чёткий</button>
+        <button data-q="custom">Своя ссылка</button>
+      </div>
+      <input id="qrUrl" class="inp" placeholder="https://…" hidden>
+      <p class="tip" id="qrTip">Ведёт на 5slay.ru — как на плакатах.</p>
+    </section>
+  </aside>
+</main>
+
+<div id="cutModal" class="modal" hidden>
+  <div class="sheet">
+    <header><h3>Своё фото</h3><p id="cutMsg">Вырезаю фон…</p></header>
+    <div class="cutStage" id="cutStage"><canvas id="cutCv"></canvas></div>
+    <div class="cutTools">
+      <div class="seg" id="brushSeg"><button data-b="erase" class="on">Стереть</button><button data-b="restore">Вернуть</button></div>
+      <label class="range">Кисть <input type="range" id="brushSize" min="8" max="120" value="40"></label>
+      <button class="btn ghost icon" id="cutUndo" aria-label="Отменить">↶</button>
+      <button class="btn ghost" id="cutAuto">Вырезать заново</button>
+      <button class="btn ghost" id="cutNoBg">Оставить с фоном</button>
+      <button class="btn ghost" id="cutSticker" title="Не менять главное фото, а положить картинку поверх плаката">Наклеить поверх</button>
+    </div>
+    <footer><button class="btn ghost" id="cutCancel">Отмена</button><button class="btn primary" id="cutDone">Готово</button></footer>
+  </div>
+</div>
+
+<div id="pop" class="pop" hidden>
+  <div id="popFields"></div>
+  <div class="popBtns"><button class="btn ghost" id="popReset">Как было</button><button class="btn primary" id="popOk">Готово</button></div>
+</div>
+<div id="busy" class="busy" hidden><div class="spin"></div><p id="busyText">Готовлю файл…</p></div>
+<div id="toast" class="toast" role="status"></div>
+<input type="file" id="file" accept="image/*" hidden>
+<input type="file" id="fileExtra" accept="image/*" hidden>
+
+<script src="js/lib/qrcode.js?v=24"></script>
+<script src="js/lib/jspdf.umd.min.js?v=24"></script>
+<script src="js/lib/jsQR.js?v=24"></script>
+<script src="js/assets.js?v=24"></script>
+<script src="js/core.js?v=24"></script>
+<script src="js/fx.js?v=24"></script>
+<script src="js/text.js?v=24"></script>
+<script src="js/phrases.js?v=24"></script>
+<script src="js/render.js?v=24"></script>
+<script src="js/layouts.js?v=24"></script>
+<script src="js/layouts2.js?v=24"></script>
+<script src="js/editor.js?v=24"></script>
+<script src="js/cutout.js?v=24"></script>
+<script src="js/export.js?v=24"></script>
+<script src="js/app.js?v=24"></script>
+</body>
+</html>

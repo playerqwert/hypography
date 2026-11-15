@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Все комбинации — проверка</title>
+<style>
+  body { margin: 0; padding: 16px; background: #ddd; font: 13px system-ui; }
+  h2 { margin: 18px 0 8px; font-size: 16px; }
+  .grid { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; }
+  figure { margin: 0; } figcaption { color: #555; margin-top: 4px; }
+  canvas { display: block; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+  canvas.t { background: conic-gradient(#ccc 25%, #eee 0 50%, #ccc 0 75%, #eee 0) 0 0/20px 20px; }
+</style>
+</head>
+<body>
+<div id="out"></div>
+<script src="../js/lib/qrcode.js"></script>
+<script src="../js/assets.js"></script>
+<script src="../js/core.js"></script>
+<script src="../js/fx.js"></script>
+<script src="../js/text.js"></script>
+<script src="../js/phrases.js"></script>
+<script src="../js/render.js"></script>
+<script src="../js/layouts.js"></script>
+<script src="../js/layouts2.js"></script>
+<script>
+(async () => {
+  await P5.init();
+  const q = new URLSearchParams(location.search);
+  const langs = (q.get("lang") || "ru").split(",");
+  const formats = (q.get("f") || "poster,meme").split(",");
+  const seeds = (q.get("seed") || "2").split(",").map(Number);
+  const W = +(q.get("w") || 260);
+  const out = document.getElementById("out");
+  for (const format of formats) for (const lang of langs) {
+    const h = document.createElement("h2"); h.textContent = `${format} · ${lang}`; out.appendChild(h);
+    const g = document.createElement("div"); g.className = "grid"; out.appendChild(g);
+    for (const style of (q.get("st") || "fan,zine,boss,wanted,news").split(",")) for (const color of ["bw", "color"]) for (const seed of seeds) {
+      const pid = q.get("pid") || { poster: { fan: "glasses", zine: "royal", boss: "pointing", wanted: "glasses", news: "royal" }, meme: { fan: "sad", zine: "laugh", boss: "sad", wanted: "sad", news: "laugh" } }[format][style];
+      const S = { format, style, color, acc: +(q.get("acc") || 0), pid, fx: "auto", lang, font: q.get("font") || "auto", qr: { mode: q.get("qr") || "orig", url: "" }, showQR: true, seed, headIdx: +(q.get("hi") || 0), subIdx: 0 };
+      S.head = q.get("head") || P5.phraseList(S, "head")[S.headIdx % P5.phraseList(S, "head").length];
+      S.sub = P5.phraseList(S, "sub")[0];
+      const sc = P5.layout(S);
+      const c = document.createElement("canvas"); c.width = W * 2; c.height = Math.round(W * 2 * sc.H / sc.W);
+      c.style.width = W + "px";
+      const ctx = c.getContext("2d");
+      if (sc.sticker) { c.className = "t"; const off = P5.canvas(c.width, c.height); P5.render(off.getContext("2d"), sc, { scale: c.width / sc.W, transparent: true }); ctx.drawImage(P5.outline(off, 22 * c.width / sc.W), 0, 0); }
+      else P5.render(ctx, sc, { scale: c.width / sc.W });
+      const f = document.createElement("figure"); f.appendChild(c);
+      const cap = document.createElement("figcaption"); cap.textContent = `${style} · ${color} · seed ${seed}`; f.appendChild(cap);
+      g.appendChild(f);
+      await new Promise(r => setTimeout(r, 0));
+    }
+  }
+  document.title = "done";
+})();
+</script>
+</body>
+</html>

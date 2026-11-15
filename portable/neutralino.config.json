@@ -1,0 +1,48 @@
+{
+  "applicationId": "ru.hypography.app",
+  "version": "1.0.0",
+  "defaultMode": "window",
+  "port": 0,
+  "documentRoot": "/www/",
+  "url": "/index.html",
+  "enableServer": true,
+  "enableNativeAPI": true,
+  "tokenSecurity": "one-time",
+  "logging": {
+    "enabled": false,
+    "writeToLogFile": false
+  },
+  "nativeAllowList": [
+    "app.exit",
+    "os.showSaveDialog",
+    "filesystem.writeBinaryFile",
+    "window.*"
+  ],
+  "modes": {
+    "window": {
+      "title": "Hypography — Типография хайпа",
+      "width": 1400,
+      "height": 920,
+      "minWidth": 900,
+      "minHeight": 640,
+      "center": true,
+      "fullScreen": false,
+      "alwaysOnTop": false,
+      "icon": "/www/icon.png",
+      "enableInspector": false,
+      "borderless": false,
+      "maximize": false,
+      "hidden": false,
+      "resizable": true,
+      "exitProcessOnClose": true
+    }
+  },
+  "cli": {
+    "binaryName": "Hypography",
+    "resourcesPath": "/www/",
+    "extensionsPath": "/extensions/",
+    "clientLibrary": "/www/js/lib/neutralino.js",
+    "binaryVersion": "6.10.0",
+    "clientVersion": "6.10.0"
+  }
+}

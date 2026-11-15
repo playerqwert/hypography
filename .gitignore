@@ -1,0 +1,37 @@
+# зависимости и результаты сборки
+node_modules/
+dist/
+*.exe
+*.apk
+*.blockmap
+
+# копии программы, которые собирают prepare.py
+desktop/www/
+desktop/icon.png
+portable/www/
+portable/bin/
+portable/.tmp/
+android-app/www/
+android-app/android/app/src/main/assets/public/
+android-app/android/app/src/main/assets/capacitor.config.json
+android-app/android/app/src/main/assets/capacitor.plugins.json
+android-app/android/capacitor-cordova-android-plugins/
+
+# Android / Gradle
+.gradle/
+android-app/android/app/build/
+android-app/android/build/
+android-app/android/local.properties
+*.keystore
+*.jks
+
+# черновики дизайна и служебное
+napravleniya/
+assets/fx/
+assets/fonts/Oi.ttf
+.DS_Store
+Thumbs.db
+
+# служебное
+.tmp/
+android-app/.javahome

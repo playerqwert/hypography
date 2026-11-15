@@ -1,0 +1,41 @@
+{
+  "name": "hypography",
+  "productName": "Hypography",
+  "version": "1.0.0",
+  "description": "Hypography poster factory",
+  "author": "Hypography",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis"
+  },
+  "build": {
+    "appId": "ru.hypography.app",
+    "productName": "Hypography",
+    "files": [
+      "main.js",
+      "icon.png",
+      "www/**/*"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "shortcutName": "Hypography",
+      "artifactName": "Hypography-setup.exe"
+    },
+    "afterPack": "./afterPack.js"
+  },
+  "devDependencies": {
+    "electron": "^33.4.11",
+    "electron-builder": "^25.1.8",
+    "rcedit": "^4.0.1"
+  }
+}
